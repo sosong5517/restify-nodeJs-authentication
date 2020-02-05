@@ -2,7 +2,8 @@ const restify = require('restify');
 const project = require('../../package.json');
 const corsMiddleware = require('restify-cors-middleware')
 const basicAuth = require('../auth/basic_auth_helper');
-const wrapper = require('../helpers/utils/wrapper')
+const wrapper = require('../helpers/utils/wrapper');
+const userHandler = require('./modules/user/handler/api_handler')
 
 function AppServer() {
     this.server = restify.createServer({
@@ -32,6 +33,8 @@ function AppServer() {
     this.server.get('/', (req, res) => {
         wrapper.response(res, 'success', wrapper.data('Index'), 'This service is running properly');
     });
+
+    this.server.post('/api/users/v1/register', basicAuth.isAuthenticated, userHandler.registerUser);
 
 }
 module.exports = AppServer;
